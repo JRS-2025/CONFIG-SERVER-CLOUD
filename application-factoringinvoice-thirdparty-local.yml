@@ -1,0 +1,143 @@
+spring:
+  application:
+    name: b3td-factoringinvoice-thirdparty-api
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+
+  # Java 25 Virtual Threads
+  threads:
+    virtual:
+      enabled: true
+
+  # WebFlux
+  webflux:
+    base-path: /thirdparty
+
+  # Redis reactive (Lettuce)
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      lettuce:
+        pool:
+          max-active: 20
+          max-idle: 10
+          min-idle: 2
+        shutdown-timeout: 200ms
+
+  # Kafka
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all
+      properties:
+        enable.idempotence: true
+        max.in.flight.requests.per.connection: 1
+
+  # Spring Cloud Config
+  config:
+    import: optional:configserver:${CONFIG_SERVER_URL:http://localhost:8888}
+
+  # Eureka
+  cloud:
+    config:
+      fail-fast: false
+    discovery:
+      enabled: true
+
+# Eureka client
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${random.value}
+
+# Cavali vendor config
+cavali:
+  base-url: ${CAVALI_BASE_URL:https://api.qae.cavali.com.pe}
+  oauth2:
+    client-id: ${CAVALI_CLIENT_ID:}
+    client-secret: ${CAVALI_CLIENT_SECRET:}
+    grant-type: client_credentials
+  timeout:
+    connect-ms: 5000
+    read-ms: 8000
+
+# AS400 iSeries
+as400:
+  host: ${AS400_HOST:localhost}
+  user: ${AS400_USER:}
+  password: ${AS400_PASSWORD:}
+  library: ${AS400_LIBRARY:B3TDLIB}
+
+# App config
+app:
+  redis:
+    invoice-state-ttl-hours: ${INVOICE_STATE_TTL_HOURS:48}
+  kafka:
+    topics:
+      lock-requested: invoice.lock.requested
+      lock-result: invoice.lock.result
+      unlock-requested: invoice.unlock.requested
+      unlock-done: invoice.unlock.done
+    consumer-group: b3td-thirdparty-cg
+  retry:
+    max-hours: ${MAX_RETRY_HOURS:8}
+
+# Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics,circuitbreakers
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  tracing:
+    sampling:
+      probability: 1.0
+
+# Resilience4j
+resilience4j:
+  circuitbreaker:
+    instances:
+      cavali:
+        failure-rate-threshold: 50
+        minimum-number-of-calls: 10
+        sliding-window-size: 20
+        wait-duration-in-open-state: 30s
+        permitted-number-of-calls-in-half-open-state: 3
+  retry:
+    instances:
+      cavali:
+        max-attempts: 3
+        wait-duration: 1s
+        exponential-backoff-multiplier: 2
+  timelimiter:
+    instances:
+      cavali:
+        timeout-duration: 8s
+
+# Logging
+logging:
+  level:
+    pe.com.b3td: DEBUG
+    org.springframework.web.reactive: INFO
+    reactor.kafka: INFO
+    io.github.resilience4j: DEBUG
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} traceId=%X{traceId} - %msg%n"
+
+server:
+  port: ${SERVER_PORT:8080}
