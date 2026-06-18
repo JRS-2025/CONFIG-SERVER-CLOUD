@@ -134,6 +134,7 @@ logging:
   level:
     pe.com.b3td: DEBUG
     org.springframework.web.reactive: INFO
+    org.springframework.web.reactive.result.method.annotation: TRACE
     reactor.kafka: INFO
     io.github.resilience4j: DEBUG
   pattern:
