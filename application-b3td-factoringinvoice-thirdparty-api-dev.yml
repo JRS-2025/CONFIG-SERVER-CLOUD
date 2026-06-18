@@ -3,6 +3,10 @@ spring:
     name: b3td-factoringinvoice-thirdparty-api
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:dev}
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.security.reactive.ReactiveSecurityAutoConfiguration
+      - org.springframework.boot.autoconfigure.security.reactive.ReactiveUserDetailsServiceAutoConfiguration
  
   # Java 25 Virtual Threads
   threads:
@@ -44,7 +48,6 @@ spring:
   # Eureka
   cloud:
     config:
-      enabled: false
       fail-fast: false
     discovery:
       enabled: true
