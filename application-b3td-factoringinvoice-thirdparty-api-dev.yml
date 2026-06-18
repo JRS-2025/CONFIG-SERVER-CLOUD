@@ -3,7 +3,10 @@ spring:
     name: b3td-factoringinvoice-thirdparty-api
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:dev}
-
+  security:
+    user:
+      name: admin
+      password: admin123
   # Java 25 Virtual Threads
   threads:
     virtual:
@@ -96,7 +99,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info,prometheus,metrics,circuitbreakers,mappings
+        include: "*"
   endpoint:
     health:
       show-details: always
