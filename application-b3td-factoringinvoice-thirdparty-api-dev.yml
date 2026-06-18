@@ -7,16 +7,14 @@ spring:
     exclude:
       - org.springframework.boot.autoconfigure.security.reactive.ReactiveSecurityAutoConfiguration
       - org.springframework.boot.autoconfigure.security.reactive.ReactiveUserDetailsServiceAutoConfiguration
- 
+
   # Java 25 Virtual Threads
   threads:
     virtual:
       enabled: true
-
   # WebFlux
   #webflux:
     #base-path: /thirdparty
-
   # Redis reactive (Lettuce)
   data:
     redis:
@@ -29,7 +27,6 @@ spring:
           max-idle: 10
           min-idle: 2
         shutdown-timeout: 200ms
-
   # Kafka
   kafka:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
@@ -40,18 +37,15 @@ spring:
       properties:
         enable.idempotence: true
         max.in.flight.requests.per.connection: 1
-
   # Spring Cloud Config
-  config:
-    import: optional:configserver:${CONFIG_SERVER_URL:http://localhost:8888}
-
+  #config:
+    #import: optional:configserver:${CONFIG_SERVER_URL:http://localhost:8888}
   # Eureka
   cloud:
     config:
       fail-fast: false
     discovery:
       enabled: true
-
 # Eureka client
 eureka:
   client:
@@ -62,7 +56,6 @@ eureka:
   instance:
     prefer-ip-address: true
     instance-id: ${spring.application.name}:${random.value}
-
 # Cavali vendor config
 cavali:
   base-url: ${CAVALI_BASE_URL:https://api.qae.cavali.com.pe}
@@ -73,14 +66,12 @@ cavali:
   timeout:
     connect-ms: 5000
     read-ms: 8000
-
 # AS400 iSeries
 as400:
   host: ${AS400_HOST:localhost}
   user: ${AS400_USER:}
   password: ${AS400_PASSWORD:}
   library: ${AS400_LIBRARY:B3TDLIB}
-
 # App config
 app:
   redis:
@@ -94,7 +85,6 @@ app:
     consumer-group: b3td-thirdparty-cg
   retry:
     max-hours: ${MAX_RETRY_HOURS:8}
-
 # Actuator
 management:
   endpoints:
@@ -111,7 +101,6 @@ management:
   tracing:
     sampling:
       probability: 1.0
-
 # Resilience4j
 resilience4j:
   circuitbreaker:
@@ -132,7 +121,6 @@ resilience4j:
     instances:
       cavali:
         timeout-duration: 8s
-
 # Logging
 logging:
   level:
@@ -143,6 +131,5 @@ logging:
     io.github.resilience4j: DEBUG
   pattern:
     console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} traceId=%X{traceId} - %msg%n"
-
 server:
   port: ${SERVER_PORT:8080}
