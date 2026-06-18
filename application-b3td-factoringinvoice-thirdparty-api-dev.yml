@@ -10,8 +10,8 @@ spring:
       enabled: true
 
   # WebFlux
-  webflux:
-    base-path: /thirdparty
+  #webflux:
+    #base-path: /thirdparty
 
   # Redis reactive (Lettuce)
   data:
