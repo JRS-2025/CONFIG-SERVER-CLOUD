@@ -44,6 +44,7 @@ spring:
   # Eureka
   cloud:
     config:
+      enabled: false
       fail-fast: false
     discovery:
       enabled: true
