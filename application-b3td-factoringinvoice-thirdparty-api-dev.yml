@@ -96,7 +96,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info,prometheus,metrics,circuitbreakers
+        include: health,info,prometheus,metrics,circuitbreakers,mappings
   endpoint:
     health:
       show-details: always
